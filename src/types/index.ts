@@ -1,20 +1,19 @@
-// ─── Primitives ────────────────────────────────────────────────────────────────
 
 /** ISO 8601 date string, e.g. "2026-05-16" */
 type ISODate = string;
 
 /** Unique identifier — use crypto.randomUUID() to generate */
-type ID = string;
+type ID = string; 
 
 
-// ─── Enums ─────────────────────────────────────────────────────────────────────
+// Enums
 
 type TransactionType = "income" | "expense";
 
 type RecurrenceInterval = "none" | "daily" | "weekly" | "monthly" | "yearly";
 
 
-// ─── Core entities ─────────────────────────────────────────────────────────────
+// Interfaces
 
 interface Category {
   id: ID;
@@ -46,7 +45,7 @@ interface Budget {
 }
 
 
-// ─── Derived / computed types ──────────────────────────────────────────────────
+// computed types 
 
 interface CategorySummary {
   category: Category;
@@ -65,7 +64,7 @@ interface MonthlySummary {
 }
 
 
-// ─── App state ─────────────────────────────────────────────────────────────────
+// App state 
 
 interface AppState {
   transactions: Transaction[];
@@ -74,7 +73,7 @@ interface AppState {
 }
 
 
-// ─── localStorage helpers ──────────────────────────────────────────────────────
+// localStorage helpers ─ persistence
 
 const STORAGE_KEY = "budget_tracker_v1";
 
@@ -105,6 +104,7 @@ const defaultState: AppState = {
     { id: crypto.randomUUID(), name: "Dining out",   type: "expense", color: "#9C27B0", icon: "🍜", createdAt: new Date().toISOString() },
     { id: crypto.randomUUID(), name: "Health",       type: "expense", color: "#00BCD4", icon: "💊", createdAt: new Date().toISOString() },
     { id: crypto.randomUUID(), name: "Entertainment",type: "expense", color: "#E91E63", icon: "🎬", createdAt: new Date().toISOString() },
+    { id: crypto.randomUUID(), name: "Mobile & Internet", type: "expense", color: "#607D8B", icon: "📱", createdAt: new Date().toISOString() },
   ],
 };
 
@@ -112,28 +112,26 @@ const defaultState: AppState = {
 // helper functions
 
 function getTransactionsForMonth(transactions: Transaction[], month: string): Transaction[] {
-  return transactions.filter((t) => t.date.startsWith(month));
+  return transactions.filter(t => t.date.startsWith(month));
+}
+
+function getBudgetsForMonth(budgets: Budget[], month: string): Budget[] {
+  return budgets.filter(b => b.month === month);
 }
 
 function computeMonthlySummary(month: string, transactions: Transaction[], categories: Category[],
   budgets: Budget[]): MonthlySummary {
   const monthTxns = getTransactionsForMonth(transactions, month);
-  const monthBudgets = budgets.filter((b) => b.month === month);
-
-  const totalIncome = monthTxns
-    .filter((t) => t.type === "income")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const totalExpenses = monthTxns
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
+  const monthBudgets = getBudgetsForMonth(budgets, month);
+  //income and expenses for the month
+  const totalIncome = monthTxns.filter(t => t.type === "income").reduce((sum, t) => sum + t.amount, 0);
+  const totalExpenses = monthTxns.filter(t => t.type === "expense").reduce((sum, t) => sum + t.amount, 0);
 
   const categoryBreakdown: CategorySummary[] = categories.map((cat) => {
-    const totalSpent = monthTxns
-      .filter((t) => t.categoryId === cat.id)
-      .reduce((sum, t) => sum + t.amount, 0);
+    //breaking down total spent and budget for a particular category
+    const totalSpent = monthTxns.filter(t => t.categoryId === cat.id).reduce((sum, t) => sum + t.amount, 0);
+    const budget = monthBudgets.find(b => b.categoryId === cat.id);
 
-    const budget = monthBudgets.find((b) => b.categoryId === cat.id);
     let percentUsed: number | undefined = 0;
     if (budget != undefined) {
         percentUsed = (totalSpent / budget.limitAmount) * 100;
@@ -141,12 +139,21 @@ function computeMonthlySummary(month: string, transactions: Transaction[], categ
         percentUsed = undefined;
     }
 
+    let isOverBudget: boolean;
+    if (budget !== undefined) {
+        if (totalSpent > budget.limitAmount) {
+            isOverBudget = true;
+        } else {
+            isOverBudget = false;
+        }
+    }
+
     return {
       category: cat,
       totalSpent,
       budget,
       percentUsed,
-      isOverBudget: budget ? totalSpent > budget.limitAmount : false,
+      isOverBudget: isOverBudget,
     };
   });
 
