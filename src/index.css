@@ -70,7 +70,7 @@ h2 {
 }
 
 h1 {
-  font-size: 56px;
+  font-size: 23px;
   letter-spacing: -1.68px;
   margin: 32px 0;
   @media (max-width: 1024px) {
@@ -159,4 +159,62 @@ code {
 .transaction-item button:hover {
   border-color: #ef4444;
   color: #ef4444;
+}
+
+.summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  flex: 1;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  text-align: left;
+}
+
+.summary-card p {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.summary-card h2 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.summary-card.income h2 {
+  color: #22c55e;
+}
+
+.summary-card.expense h2 {
+  color: #ef4444;
+}
+
+.summary-card.balance h2 {
+  color: var(--text-h);
+}
+
+.app-header {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.app-header h1 {
+  margin: 0;
+  background: linear-gradient(135deg, var(--accent), #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-header p {
+  color: var(--text);
+  font-size: 14px;
+  margin-top: 8px;
 }
