@@ -3,6 +3,7 @@ import { useStore } from "./store/useStore";
 import TransactionForm from "./components/TransactionForm";
 import TransactionList from "./components/TransactionList";
 import MonthlySummary from "./components/MonthlySummary";
+import SpendingChart from "./components/SpendingChart";
 
 function App() {
   const { transactions } = useStore();
@@ -25,6 +26,7 @@ function App() {
         onChange={(e) => setSelectedMonth(e.target.value)}
       />
       <MonthlySummary month={selectedMonth} />
+      <SpendingChart month={selectedMonth} />
       <TransactionForm />
       <TransactionList month={selectedMonth} />
     </div>

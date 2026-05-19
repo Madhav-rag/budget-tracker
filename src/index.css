@@ -34,7 +34,7 @@
   :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
-    --bg: #16171d;
+    --bg: transparent;
     --border: #2e303a;
     --code-bg: #1f2028;
     --accent: #c084fc;
@@ -60,6 +60,8 @@
 
 body {
   margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0c29, #1a1a2e, #16213e);
 }
 
 h1,
