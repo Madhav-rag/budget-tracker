@@ -4,6 +4,7 @@ import TransactionForm from "./components/TransactionForm";
 import TransactionList from "./components/TransactionList";
 import MonthlySummary from "./components/MonthlySummary";
 import SpendingChart from "./components/SpendingChart";
+import BudgetManager from "./components/BudgetManager";
 
 function App() {
   const { transactions } = useStore();
@@ -27,6 +28,7 @@ function App() {
       />
       <MonthlySummary month={selectedMonth} />
       <SpendingChart month={selectedMonth} />
+      <BudgetManager month={selectedMonth} />
       <TransactionForm />
       <TransactionList month={selectedMonth} />
     </div>
