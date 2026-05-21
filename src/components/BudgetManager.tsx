@@ -8,10 +8,10 @@ function BudgetManager({ month }: { month: string }) {
   const summary = computeMonthlySummary(month, transactions, categories, budgets);
 
   const [selectedCategory, setSelectedCategory] = useState(categories[0]?.id ?? "");
-  const [limitAmount, setLimitAmount] = useState(0);
+  const [limitAmount, setLimitAmount] = useState<number | null>(null);
 
   function handleSetBudget() {
-    if (!selectedCategory || limitAmount <= 0) return;
+    if (!selectedCategory || !limitAmount || limitAmount <= 0) return;
 
     const newBudget: Budget = {
       id: crypto.randomUUID(),
@@ -44,10 +44,10 @@ function BudgetManager({ month }: { month: string }) {
         </select>
 
         <input
-          type="number"
-          placeholder="Limit amount"
-          value={limitAmount}
-          onChange={(e) => setLimitAmount(Number(e.target.value))}
+            type="number"
+            placeholder="0"
+            value={limitAmount ?? ""}
+            onChange={(e) => setLimitAmount(e.target.value ? Number(e.target.value) : null)}
         />
 
         <button onClick={handleSetBudget}>Set Budget</button>

@@ -5,7 +5,7 @@ import { useStore } from "../store/useStore";
 function TransactionForm() {
   const { categories, addTransaction } = useStore();
 
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number | null>(null);
   const [type, setType] = useState<TransactionType>("expense");
   const [categoryId, setCategoryId] = useState<string>(categories[0]?.id ?? "");
   const [description, setDescription] = useState<string>("");
@@ -19,7 +19,7 @@ function TransactionForm() {
 
   function handleSubmit() {
     console.log({ amount, type, categoryId, date, description });
-    if (amount <= 0 || !categoryId || !date) return;
+    if (!amount || amount <= 0 || !categoryId || !date) return;
 
     const newTransaction: Transaction = {
       id: crypto.randomUUID(),
@@ -53,9 +53,9 @@ function TransactionForm() {
 
       <input
         type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(Number(e.target.value))}
+        placeholder="0"
+        value={amount ?? ""}
+        onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : null)}
       />
 
       <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
