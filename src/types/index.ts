@@ -139,7 +139,7 @@ function computeMonthlySummary(month: string, transactions: Transaction[], categ
         percentUsed = undefined;
     }
 
-    let isOverBudget: boolean;
+    let isOverBudget = false;
     if (budget !== undefined) {
         if (totalSpent > budget.limitAmount) {
             isOverBudget = true;
